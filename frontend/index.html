@@ -1,0 +1,122 @@
+<!-- login and sinup  -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+
+</style>
+
+<body>
+
+
+    <div class="mainContainer">
+
+        <div class="formContainer">
+            <!-- <div class="signupContainer">
+                
+
+            </div>
+            <div class="loginContainer">
+
+            </div> -->
+
+            <div class="signupForm">
+                <h1>signup</h1>
+
+                <form>
+                    <label for="email">email</label><br>
+                    <input type="text" id="email" name="email"><br>
+                    <label for="password">Password:</label><br>
+                    <input type="password" id="password" name="password"><br>
+                    <label for="password2"> Re Enter Password:</label><br>
+                    <input type="password" id="password2" name="password2"><br>
+                    <input type="submit" value="submit">
+                </form>
+            </div>
+
+            <div class="loginForm">
+                <h1>login</h1>
+
+                <form>
+                    <label for="email">email</label><br>
+                    <input type="text" id="emaillogin" name="email"><br>
+                    <label for="password">Password:</label><br>
+                    <input type="password" id="passwordlogin" name="password"><br>
+                    <input type="submit" value="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    const loginApi = "http://localhost:8080/user/login"
+    const signupApi = "http://localhost:8080/user/signup"
+
+    // logi  form
+    const loginForm = document.querySelector('.loginForm');
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("emaillogin").value;
+        const password = document.getElementById("passwordlogin").value;
+
+        const response = await fetch(loginApi, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.msg == "Invalid Credentials") {
+            alert("Invalid Credentials")
+        }
+        else {
+            localStorage.setItem("usertoken",JSON.stringify(data.token))
+            alert("Login Successful")
+            window.location.href = "dashboard.html";
+        }
+
+
+
+
+    });
+
+    // signup form
+    const signupForm = document.querySelector('.signupForm');
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+
+        if (password !== password2) {
+            console.log('Passwords do not match');
+            return;
+        }
+
+        const response = await fetch(signupApi, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+
+    });
+
+</script>
+
+</html>

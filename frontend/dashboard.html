@@ -1,0 +1,247 @@
+<!-- login and sinup  -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    #employeeform {
+        display: none;
+    }
+</style>
+
+<body>
+    <h1>Employee management software</h1>
+
+
+
+    <button class="addEmployee" id="addEmployee">
+        Add Employee
+    </button>
+    <button class="logout" id="logout">
+        logout
+    </button>
+
+    <div class="addEmployeeForm">
+        <form id="employeeform">
+            <label for="fname">first name</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <label for="lname">last name</label><br>
+            <input type="text" id="lname" name="lname"><br>
+            <label for="email">email</label><br>
+            <input type="text" id="email" name="email"><br>
+            <label for="dept">department:</label><br>
+            <select name="department" id="department">
+                <option value="Tech">Tech</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Operations">Operations</option>
+            </select>
+            <label for="salary">salary</label><br>
+            <input type="text" id="salary" name="salary"><br>
+            <input type="submit" value="submit">
+        </form>
+    </div>
+
+    <h3>filter By department</h3>
+    <select name="department" id="departmentfilter">
+        <option value="Tech">Tech</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Operations">Operations</option>
+    </select>
+    <button class="sortbysalaryasc">Sort By salary Asc</button>
+    <button class="sortbysalarydesc">Sort By salary Desc</button>
+    <h3>search by first name </h3>
+    <input type="text" id="search" name="search"><br>
+
+    <h1>employee data</h1>
+    <div class="employeeDetails">
+
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+<script>
+    let getEmployeeApi = "http://localhost:8080/employee/get";
+    let filterApi = "http://localhost:8080/employee"
+    let sortApi = "http://localhost:8080/employee/salary"
+    let searchApi = "http://localhost:8080/employee/search"
+
+
+
+    const token = JSON.parse(localStorage.getItem("usertoken"))
+    console.log("🚀 ~ file: dashboard.html:59 ~ token:", token)
+    const addButton = document.getElementById("addEmployee")
+    const form = document.getElementById('employeeform');
+    const logoutBtn = document.getElementById("logout")
+    addButton.addEventListener('click', async (e) => {
+        form.style.display = "block"
+    })
+    logoutBtn.addEventListener('click', async (e) => {
+        alert("your will be logged out")
+        localStorage.removeItem("usertoken")
+        window.location.reload();
+    })
+
+    window.addEventListener("load", (event) => {
+        if (!token) {
+            window.location.href = "index.html";
+        }
+        getEmployeeData();
+        // displayEmployeeData();
+    });
+    const addemployeeApi = "http://localhost:8080/employee/employees"
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const firstname = document.getElementById("fname").value;
+        const lastname = document.getElementById("lname").value;
+        const email = document.getElementById("email").value;
+        const department = document.getElementById("department").value;
+        const salary = document.getElementById("salary").value;
+
+        const obj = {
+            firstname, lastname, email, department, salary
+        }
+        console.log("🚀 ~ file: dashboard.html:63 ~ form.addEventListener ~ obj:", obj)
+        const response = await fetch(addemployeeApi, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(obj)
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+
+
+    });
+
+    // displaying employees data in form of table 
+    const employeeTableBody = document.querySelector("#employeeTable tbody");
+
+    async function getEmployeeData() {
+        try {
+            const response = await fetch(getEmployeeApi);
+
+            const result = await response.json();
+            console.log("Success:", result);
+            displayEmployeeData(result.data)
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    function displayEmployeeData(employees) {
+        const employeeTableBody = document.querySelector("#employeeTable tbody");
+        employeeTableBody.innerHTML = ""
+        employees.forEach(employee => {
+            const row = document.createElement("tr");
+            const nameblock = document.createElement("td");
+            nameblock.textContent = employee.firstname + " " + employee.lastname;
+            const emailblock = document.createElement("td");
+            emailblock.textContent = employee.email;
+            const departmentblock = document.createElement("td");
+            departmentblock.textContent = employee.department;
+            const salaryblock = document.createElement("td");
+            salaryblock.textContent = employee.salary;
+            const editBlock = document.createElement("td");
+            const editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+            editButton.addEventListener("click", () => {
+                console.log(`Editing employee ${employee.name}`);
+            });
+            editBlock.appendChild(editButton);
+            const deleteBlock = document.createElement("td");
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => {
+                console.log(`Deleting employee ${employee.name}`);
+            });
+            deleteBlock.appendChild(deleteButton);
+            row.appendChild(nameblock);
+            row.appendChild(emailblock);
+            row.appendChild(departmentblock);
+            row.appendChild(salaryblock);
+            row.appendChild(editBlock);
+            row.appendChild(deleteBlock);
+            employeeTableBody.appendChild(row);
+        });
+    }
+
+    // filter by department 
+    const departmentfilter = document.getElementById("departmentfilter");
+    departmentfilter.addEventListener("change", async () => {
+        const department = departmentfilter.value;
+        console.log("🚀 ~ file: dashboard.html:190 ~ department.addEventListener ~ department:", department)
+        const response = await fetch(`${filterApi}/${department}`);
+        const data = await response.json();
+        console.log(data);
+        displayEmployeeData(data.data)
+    });
+
+    // sort by salary asc 
+    const sortBySalaryAscButton = document.querySelector(".sortbysalaryasc");
+    const sortBySalaryDescButton = document.querySelector(".sortbysalarydesc");
+
+    sortBySalaryAscButton.addEventListener("click", async () => {
+        const response = await fetch(`${sortApi}/asc`);
+        const data = await response.json();
+        console.log(data);
+        displayEmployeeData(data.data)
+
+        //display data
+
+    });
+    // sort by salary desc
+    sortBySalaryDescButton.addEventListener("click", async () => {
+        const response = await fetch(`${sortApi}/desc`);
+        const data = await response.json();
+        console.log(data);
+        displayEmployeeData(data.data)
+
+    });
+
+    // search by first name
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("change", async () => {
+
+        const firstName = searchInput.value;
+        if (firstName != "") {
+            const response = await fetch(`${searchApi}/${firstName}`);
+            const data = await response.json();
+            console.log(data);
+            displayEmployeeData(data.data)
+        }
+        else {
+            const response = await fetch(`${getEmployeeApi}`);
+            const data = await response.json();
+            console.log(data);
+            displayEmployeeData(data.data)
+        }
+
+        //display data on page
+
+    });
+
+
+
+</script>
+
+</html>

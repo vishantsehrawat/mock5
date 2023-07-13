@@ -74,8 +74,15 @@ employeeRouter.get("/search/:firstname", async (req, res) => {
     const { firstname } = req.params;
     console.log("🚀 ~ file: employee.routes.js:75 ~ employeeRouter.get ~ firstname:", firstname)
     try {
-        const employeeData = await EmployeeModel.find({firstname:firstname})
-        res.status(200).send({ msg: "data in salary order  ", data: employeeData })
+        if (firstname != "") {
+            const employeeData = await EmployeeModel.find({ firstname: firstname })
+            res.status(200).send({ msg: "data in salary order  ", data: employeeData })
+        }
+        else {
+            const employeeData = await EmployeeModel.find({})
+            res.status(200).send({ msg: "data in salary order  ", data: employeeData })
+
+        }
     } catch (error) {
         console.log(error.message)
     }
