@@ -40,10 +40,72 @@
         padding: 10px;
         border: none;
         border-radius: 0.25rem;
-        background-color: blue;
+        background-color: skyblue;
     }
 
     button:hover {
+        background-color: green;
+    }
+
+    .addEmployeeForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .addEmployeeForm label {
+        margin-bottom: 5px;
+    }
+
+    .addEmployeeForm input[type="text"],
+    .addEmployeeForm select {
+        margin-bottom: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .addEmployeeForm input[type="submit"] {
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: blue;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .addEmployeeForm input[type="submit"]:hover {
+        background-color: green;
+    }
+
+    .employeeDetails {
+        margin-top: 20px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    thead th,
+    tbody td {
+        padding: 8px;
+        text-align: left;
+    }
+
+    .sortbysalaryasc,
+    .sortbysalarydesc {
+        margin: 5px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: blue;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .sortbysalaryasc:hover,
+    .sortbysalarydesc:hover {
         background-color: green;
     }
 </style>
