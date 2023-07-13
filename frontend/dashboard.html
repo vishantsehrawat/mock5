@@ -78,11 +78,11 @@
 
 </body>
 <script>
-    let getEmployeeApi = "http://localhost:8080/employee/get";
-    let filterApi = "http://localhost:8080/employee"
-    let sortApi = "http://localhost:8080/employee/salary"
-    let searchApi = "http://localhost:8080/employee/search"
-    let deleteEmployeeApi = "http://localhost:8080/employee"
+    let getEmployeeApi = "https://mock5-iyiw.onrender.com/employee/get";
+    let filterApi = "https://mock5-iyiw.onrender.com/employee"
+    let sortApi = "https://mock5-iyiw.onrender.com/employee/salary"
+    let searchApi = "https://mock5-iyiw.onrender.com/employee/search"
+    let deleteEmployeeApi = "https://mock5-iyiw.onrender.com/employee"
 
 
     const token = JSON.parse(localStorage.getItem("usertoken"))
@@ -106,7 +106,7 @@
         getEmployeeData();
         // displayEmployeeData();
     });
-    const addemployeeApi = "http://localhost:8080/employee/employees"
+    const addemployeeApi = "https://mock5-iyiw.onrender.com/employee/employees"
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
