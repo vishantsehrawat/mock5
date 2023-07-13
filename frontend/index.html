@@ -10,7 +10,21 @@
 </head>
 
 <style>
+    button {
+        margin: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 0.25rem;
+        background-color: blue;
+    }
 
+    button:hover {
+        background-color: green;
+    }
+
+    .loginForm {
+        display: none;
+    }
 </style>
 
 <body>
@@ -39,11 +53,11 @@
                     <input type="password" id="password2" name="password2"><br>
                     <input type="submit" value="submit">
                 </form>
+                <button id="loginBtn">goto login</button>
             </div>
 
             <div class="loginForm">
                 <h1>login</h1>
-
                 <form>
                     <label for="email">email</label><br>
                     <input type="text" id="emaillogin" name="email"><br>
@@ -51,6 +65,7 @@
                     <input type="password" id="passwordlogin" name="password"><br>
                     <input type="submit" value="submit">
                 </form>
+                <button id="signupBtn">goto signup</button>
             </div>
         </div>
     </div>
@@ -114,6 +129,24 @@
         const data = await response.json();
         console.log(data);
 
+
+    });
+
+
+
+    //signup login toggle 
+    const signupBtn = document.getElementById('signupBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    signupBtn.addEventListener('click', () => {
+        signupForm.style.display = "block"
+        loginForm.style.display = "none"
+
+    });
+
+    loginBtn.addEventListener('click', () => {
+        // alert("fdsf")
+        loginForm.style.display = "block"
+        signupForm.style.display = "none"
 
     });
 
