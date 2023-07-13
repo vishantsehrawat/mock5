@@ -82,7 +82,7 @@
     let filterApi = "http://localhost:8080/employee"
     let sortApi = "http://localhost:8080/employee/salary"
     let searchApi = "http://localhost:8080/employee/search"
-
+    let deleteEmployeeApi = "http://localhost:8080/employee"
 
 
     const token = JSON.parse(localStorage.getItem("usertoken"))
@@ -165,14 +165,24 @@
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
             editButton.addEventListener("click", () => {
-                console.log(`Editing employee ${employee.name}`);
+
             });
             editBlock.appendChild(editButton);
             const deleteBlock = document.createElement("td");
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
             deleteButton.addEventListener("click", () => {
-                console.log(`Deleting employee ${employee.name}`);
+                const id = employee._id
+                console.log("🚀 ~ file: dashboard.html:176 ~ deleteButton.addEventListener ~ id:", id)
+                fetch(`${deleteEmployeeApi}/${id}`, {
+                    method: "DELETE"
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        getEmployeeData();
+                    })
+                    .catch(error => console.error(error));
+
             });
             deleteBlock.appendChild(deleteButton);
             row.appendChild(nameblock);

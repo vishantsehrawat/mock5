@@ -9,8 +9,6 @@ employeeRouter.use(express.json())
 
 
 // storing employee data
-
-
 employeeRouter.post("/employees", async (req, res) => {
 
     const employeeData = req.body
@@ -24,13 +22,48 @@ employeeRouter.post("/employees", async (req, res) => {
     }
 })
 
+// route to delete an employee 
+employeeRouter.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+    console.log("🚀 ~ file: employee.routes.js:29 ~ employeeRouter.delete ~ id:", id)
+    try {
+        const employee = await EmployeeModel.findByIdAndDelete(id);
+        if (!employee) {
+            return res.status(404).send({ msg: "employee doesnt exist" });
+        }
+        res.status(200).send(employee);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ msg: error.message });
+    }
+});
+
+//put and employee 
+employeeRouter.put("/employees/:id", async (req, res) => {
+    const id = req.params.id;
+    // console.log("🚀 ~ file: employee.routes.js:44 ~ employeeRouter.put ~ id:", id)
+    const employeeData = req.body;
+
+    try {
+        const employee = await EmployeeModel.findByIdAndUpdate(id, employeeData);
+
+        if (!employee) {
+            return res.status(404).send({ error: "employee doesnt exist" });
+        }
+        res.status(200).send(employee);
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).send({ msg: error.message });
+    }
+});
+
 // get all the employee data 
 
 employeeRouter.get("/get", async (req, res) => {
 
     try {
         const employeeData = await EmployeeModel.find()
-        console.log("🚀 ~ file: employee.routes.js:33 ~ employeeRouter.get ~ employeeData:", employeeData)
+        // console.log("🚀 ~ file: employee.routes.js:33 ~ employeeRouter.get ~ employeeData:", employeeData)
         res.status(200).send({ msg: "employee data ", data: employeeData })
     } catch (error) {
         console.log(error.message)
@@ -41,7 +74,7 @@ employeeRouter.get("/get", async (req, res) => {
 employeeRouter.get("/:department", async (req, res) => {
 
     const { department } = req.params
-    console.log("🚀 ~ file: employee.routes.js:17 ~ employeeRouter.post ~ department:", department)
+    // console.log("🚀 ~ file: employee.routes.js:17 ~ employeeRouter.post ~ department:", department)
     try {
         const employeeData = await EmployeeModel.find({ department: department })
 
@@ -55,11 +88,11 @@ employeeRouter.get("/:department", async (req, res) => {
 employeeRouter.get("/salary/:order", async (req, res) => {
 
     const { order } = req.params;
-    console.log("🚀 ~ file: employee.routes.js:58 ~ employeeRouter.get ~ order:", order)
+    // console.log("🚀 ~ file: employee.routes.js:58 ~ employeeRouter.get ~ order:", order)
     try {
 
         const sortOrder = order == "desc" ? -1 : 1
-        console.log("🚀 ~ file: employee.routes.js:62 ~ employeeRouter.get ~ sortOrder:", sortOrder)
+        // console.log("🚀 ~ file: employee.routes.js:62 ~ employeeRouter.get ~ sortOrder:", sortOrder)
         const employeeData = await EmployeeModel.find({}).sort({ salary: sortOrder })
         res.status(200).send({ msg: "data in salary order  ", data: employeeData })
     } catch (error) {
@@ -72,7 +105,7 @@ employeeRouter.get("/salary/:order", async (req, res) => {
 employeeRouter.get("/search/:firstname", async (req, res) => {
 
     const { firstname } = req.params;
-    console.log("🚀 ~ file: employee.routes.js:75 ~ employeeRouter.get ~ firstname:", firstname)
+    // console.log("🚀 ~ file: employee.routes.js:75 ~ employeeRouter.get ~ firstname:", firstname)
     try {
         if (firstname != "") {
             const employeeData = await EmployeeModel.find({ firstname: firstname })
